@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Disease Prediction | DPS</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    header {
+      background: linear-gradient(90deg, #dc3545, #ff6b6b);
+      color: white;
+      padding: 20px 0;
+    }
+
+    .navbar {
+      border-radius: 10px;
+    }
+
+    .hero-img {
+      object-fit: cover;
+      width: 100%;
+      height: 500px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    .content-area {
+      background: #e9ecef;
+      padding: 30px;
+      border-radius: 10px;
+      min-height: 600px;
+      margin-top: 20px;
+    }
+
+    footer {
+      margin-top: 20px;
+    }
+
+    footer .col-sm-6 {
+      padding: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <!-- Header -->
+    <header class="text-center fs-2 fw-bold">
+      Disease Prediction System
+    </header>
+
+    <!-- Navbar -->
+    <div class="row mt-2">
+      <div class="col-sm-12">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+          <div class="container-fluid">
+            <a class="navbar-brand fw-bold text-danger" href="{% url 'index' %}">DPS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+              aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active fw-bold text-danger{% endif %}" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'prediction' %}active fw-bold text-danger{% endif %}" href="{% url 'prediction' %}">Disease Prediction</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'fprediction' %}active fw-bold text-danger{% endif %}" href="{% url 'fprediction' %}">File Prediction</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'history' %}active fw-bold text-danger{% endif %}" href="{% url 'history' %}">Prediction History</a>
+                </li>
+              </ul>
+              <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search diseases..." aria-label="Search">
+                <button class="btn btn-outline-danger" type="submit">Search</button>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Hero Image -->
+    <div class="row mt-3">
+      <div class="col-sm-12">
+        <img src="{% static 'images/img.jpg' %}" alt="Disease Prediction Banner" class="hero-img">
+      </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="row">
+      <div class="col-sm-12 content-area">
+        {% block body %}
+        <!-- Page-specific content will be injected here -->
+        {% endblock body %}
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="row text-light text-center">
+      <div class="col-sm-6 bg-primary fs-5">© 2025 DPS</div>
+      <div class="col-sm-6 bg-dark fs-5">Developed By : <span class="fw-bold text-warning">Mo Ariz</span></div>
+    </footer>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+    crossorigin="anonymous"></script>
+</body>
+</html>
