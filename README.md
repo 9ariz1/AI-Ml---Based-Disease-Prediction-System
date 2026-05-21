@@ -197,9 +197,7 @@ db.sqlite3
 - Python Developer
 - Data Science Enthusiast
 
-LinkedIn:
-
-:contentReference[oaicite:0]{index=0}
+LinkedIn: https://www.linkedin.com/in/mo-ariz/
 
 ---
 
