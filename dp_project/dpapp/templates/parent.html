@@ -1,70 +1,578 @@
 <!doctype html>
 <html lang="en">
-  {% load static %}
-  <head>
+{% load static %}
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Disease Prediction</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-  </head>
-  <body>
-   <div class="container-fluid">
-    <div class="row bg-danger text-light text-center fs-2">
-      <div class="col-sm-12">Disease Prediction System</div>
+
+    <title>Disease Prediction System</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body{
+            background: #eef4ff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ================= BACKGROUND EFFECT ================= */
+
+        body::before{
+            content: '';
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: rgba(13,110,253,0.12);
+            border-radius: 50%;
+            top: -150px;
+            left: -120px;
+            z-index: -1;
+            filter: blur(80px);
+        }
+
+        body::after{
+            content: '';
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: rgba(0,198,255,0.12);
+            border-radius: 50%;
+            bottom: -120px;
+            right: -100px;
+            z-index: -1;
+            filter: blur(80px);
+        }
+
+        /* ================= TOPBAR ================= */
+
+        .topbar{
+            background: linear-gradient(135deg,#0d6efd,#00c6ff);
+            color: white;
+            padding: 18px;
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topbar::before{
+            content: '';
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            top: -100px;
+            right: -80px;
+        }
+
+        .topbar::after{
+            content: '';
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+            bottom: -80px;
+            left: -50px;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .custom-navbar{
+            margin-top: 18px;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(14px);
+            border-radius: 20px;
+            padding: 12px 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .navbar-brand{
+            font-size: 28px;
+            font-weight: 700;
+            color: #0d6efd !important;
+        }
+
+        .nav-link{
+            color: #111827 !important;
+            font-weight: 500;
+            margin-right: 10px;
+            position: relative;
+            transition: 0.4s;
+        }
+
+        .nav-link:hover{
+            color: #0d6efd !important;
+            transform: translateY(-3px);
+        }
+
+        .nav-link::after{
+            content: '';
+            position: absolute;
+            width: 0%;
+            height: 3px;
+            background: #0d6efd;
+            left: 0;
+            bottom: -5px;
+            transition: 0.4s;
+            border-radius: 20px;
+        }
+
+        .nav-link:hover::after{
+            width: 100%;
+        }
+
+        /* ================= SEARCH ================= */
+
+        .search-box input{
+            border-radius: 50px;
+            border: none;
+            padding-left: 20px;
+            height: 45px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .search-box input:focus{
+            box-shadow: 0 0 15px rgba(13,110,253,0.25);
+        }
+
+        .search-btn{
+            border-radius: 50px;
+            width: 45px;
+            height: 45px;
+            border: none;
+            background: linear-gradient(135deg,#0d6efd,#00c6ff);
+            color: white;
+            transition: 0.4s;
+        }
+
+        .search-btn:hover{
+            transform: scale(1.08);
+            box-shadow: 0 10px 20px rgba(13,110,253,0.3);
+        }
+
+        /* ================= MAIN CONTENT ================= */
+
+        .main-wrapper{
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .main-content{
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(14px);
+            border-radius: 30px;
+            padding: 35px;
+            min-height: 650px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+            animation: fadeUp 1s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-content::before{
+            content: '';
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: rgba(13,110,253,0.05);
+            border-radius: 50%;
+            top: -100px;
+            right: -80px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        .footer{
+            background: linear-gradient(135deg,#111827,#1f2937);
+            color: white;
+            border-radius: 30px 30px 0 0;
+            padding: 45px 30px 20px;
+            margin-top: 40px;
+        }
+
+        .footer-title{
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .footer-text{
+            color: #cbd5e1;
+            line-height: 28px;
+        }
+
+        .footer-links a{
+            display: block;
+            color: #cbd5e1;
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: 0.4s;
+        }
+
+        .footer-links a:hover{
+            color: #00c6ff;
+            transform: translateX(6px);
+        }
+
+        .social-icons a{
+            width: 45px;
+            height: 45px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            margin-right: 10px;
+            transition: 0.4s;
+            font-size: 20px;
+        }
+
+        .social-icons a:hover{
+            background: #0d6efd;
+            transform: translateY(-6px);
+        }
+
+        .footer-bottom{
+            margin-top: 25px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 18px;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        /* ================= FLOATING BUTTON ================= */
+
+        .floating-btn{
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#0d6efd,#00c6ff);
+            color: white;
+            border: none;
+            font-size: 25px;
+            box-shadow: 0 10px 30px rgba(13,110,253,0.35);
+            animation: pulse 2s infinite;
+            z-index: 999;
+        }
+
+        .floating-btn:hover{
+            transform: scale(1.1);
+        }
+
+        /* ================= ANIMATIONS ================= */
+
+        @keyframes fadeUp{
+            from{
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to{
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse{
+            0%{
+                box-shadow: 0 0 0 0 rgba(13,110,253,0.5);
+            }
+            70%{
+                box-shadow: 0 0 0 20px rgba(13,110,253,0);
+            }
+            100%{
+                box-shadow: 0 0 0 0 rgba(13,110,253,0);
+            }
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width:768px){
+
+            .topbar{
+                font-size: 24px;
+            }
+
+            .main-content{
+                padding: 20px;
+            }
+
+            .footer{
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container-fluid px-lg-5 px-md-3 px-2">
+
+        <!-- ================= TOPBAR ================= -->
+
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <div class="topbar">
+
+                    <i class="bi bi-heart-pulse-fill"></i>
+                    Disease Prediction System
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= NAVBAR ================= -->
+
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <nav class="navbar navbar-expand-lg custom-navbar">
+
+                    <div class="container-fluid">
+
+                        <a class="navbar-brand" href="{% url 'index' %}">
+                            DPS
+                        </a>
+
+                        <button class="navbar-toggler"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#navbarSupportedContent">
+
+                            <span class="navbar-toggler-icon"></span>
+
+                        </button>
+
+                        <div class="collapse navbar-collapse"
+                             id="navbarSupportedContent">
+
+                            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+
+                                <li class="nav-item">
+                                    <a class="nav-link active"
+                                       href="{% url 'index' %}">
+                                        <i class="bi bi-house-door"></i> Home
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       href="{% url 'prediction' %}">
+                                        <i class="bi bi-activity"></i>
+                                        Disease Prediction
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       href="{% url 'fprediction' %}">
+                                        <i class="bi bi-file-earmark-medical"></i>
+                                        File Prediction
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       href="{% url 'history' %}">
+                                        <i class="bi bi-clock-history"></i>
+                                        Prediction History
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                            <form class="d-flex search-box">
+
+                                <input class="form-control me-2"
+                                       type="search"
+                                       placeholder="Search...">
+
+                                <button class="search-btn"
+                                        type="submit">
+
+                                    <i class="bi bi-search"></i>
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </nav>
+
+            </div>
+
+        </div>
+
+        <!-- ================= MAIN CONTENT ================= -->
+
+        <div class="row main-wrapper">
+
+            <div class="col-sm-12">
+
+                <div class="main-content">
+
+                    {% block body %}
+
+                    {% endblock body %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= FOOTER ================= -->
+
+        <div class="row footer">
+
+            <div class="col-md-4 mb-4">
+
+                <div class="footer-title">
+                    DPS
+                </div>
+
+                <div class="footer-text">
+
+                    AI-powered disease prediction platform
+                    designed with modern healthcare technology
+                    and intelligent medical analytics.
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mb-4">
+
+                <div class="footer-title">
+                    Quick Links
+                </div>
+
+                <div class="footer-links">
+
+                    <a href="{% url 'index' %}">Home</a>
+
+                    <a href="{% url 'prediction' %}">
+                        Disease Prediction
+                    </a>
+
+                    <a href="{% url 'fprediction' %}">
+                        File Prediction
+                    </a>
+
+                    <a href="{% url 'history' %}">
+                        Prediction History
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mb-4">
+
+                <div class="footer-title">
+                    Developed By
+                </div>
+
+                <div class="footer-text">
+
+                    Saif Ahmad <br><br>
+
+                    <div class="social-icons">
+
+                        <a href="https://github.com/Saif-Ahmad11">
+                            <i class="bi bi-github"></i>
+                        </a>
+
+                        <a href="#">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+
+                        <a href="#">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+
+                        <a href="#">
+                            <i class="bi bi-twitter-x"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-sm-12 footer-bottom">
+
+                © 2026 Disease Prediction System |
+                All Rights Reserved
+
+            </div>
+
+        </div>
+
     </div>
-    <div class="row mt-2">
-      <div class="col-sm-12">
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'index' %}">DPS</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+
+    <!-- Floating Button -->
+
+    <button class="floating-btn">
+
+        <i class="bi bi-heart-pulse-fill"></i>
+
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active " aria-current="page" href="{% url 'index' %}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'prediction' %}">Disease Prediction</a>
-        </li>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'fprediction' %}">File Prediction</a>
-        </li>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'history' %}">Prediction History</a>
-        </li>
-        
-      </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
-  </div>
-</nav>
-      </div>
-    </div>
-    </div class="row mt-2">
-    <div class="col-sm-12">
-      <img src="{% static 'images/img.jpg' %}" width="100%" height="550px" center/>
-      </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-sm-12" style="background-color:lightgray;height:auto;min-height:600px;">
-        {% block body %}  
 
-        {% endblock body %}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-6 bg-primary text-center text-light fs-3">Copyright &copy; to DPS</div>
-       <div class="col-sm-6 bg-dark text-center text-light fs-3">Developed By: Saif Ahmad</div>
-    </div>
-   </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-  </body>
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AOS -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+    <script>
+        AOS.init({
+            duration: 1200,
+        });
+    </script>
+
+</body>
+
 </html>
-

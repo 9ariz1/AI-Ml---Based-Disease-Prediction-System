@@ -1,5 +1,472 @@
 {% extends "parent.html" %}
+{% load static %}
+
 {% block body %}
- <h2 style="color:rgb(6, 6, 6); text-align: center;">Home Page</h2>
+
+<style>
+
+    /* ================= HERO SECTION ================= */
+
+    .hero-section{
+        position: relative;
+        overflow: hidden;
+        border-radius: 30px;
+        background: linear-gradient(135deg,#0d6efd,#00c6ff);
+        padding: 80px 60px;
+        color: white;
+        min-height: 650px;
+        display: flex;
+        align-items: center;
+    }
+
+    .hero-section::before{
+        content: '';
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 50%;
+        top: -150px;
+        right: -120px;
+    }
+
+    .hero-section::after{
+        content: '';
+        position: absolute;
+        width: 250px;
+        height: 250px;
+        background: rgba(255,255,255,0.06);
+        border-radius: 50%;
+        bottom: -100px;
+        left: -80px;
+    }
+
+    .hero-content{
+        position: relative;
+        z-index: 2;
+        animation: fadeLeft 1.2s ease;
+    }
+
+    .hero-badge{
+        display: inline-block;
+        padding: 10px 22px;
+        border-radius: 50px;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(10px);
+        margin-bottom: 25px;
+        font-weight: 500;
+        letter-spacing: 1px;
+    }
+
+    .hero-title{
+        font-size: 68px;
+        font-weight: 700;
+        line-height: 85px;
+    }
+
+    .hero-title span{
+        color: #ffe082;
+    }
+
+    .hero-text{
+        margin-top: 25px;
+        font-size: 18px;
+        line-height: 32px;
+        max-width: 700px;
+        color: rgba(255,255,255,0.9);
+    }
+
+    .hero-buttons{
+        margin-top: 35px;
+    }
+
+    .hero-btn{
+        padding: 15px 35px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.4s;
+        display: inline-block;
+        margin-right: 15px;
+    }
+
+    .btn-primary-custom{
+        background: white;
+        color: #0d6efd;
+    }
+
+    .btn-primary-custom:hover{
+        transform: translateY(-6px);
+        background: #f8f9fa;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    }
+
+    .btn-outline-custom{
+        border: 2px solid white;
+        color: white;
+    }
+
+    .btn-outline-custom:hover{
+        background: white;
+        color: #0d6efd;
+        transform: translateY(-6px);
+    }
+
+    /* ================= HERO IMAGE ================= */
+
+    .hero-image{
+        position: relative;
+        z-index: 2;
+        animation: float 4s ease-in-out infinite;
+    }
+
+    .hero-image img{
+        width: 100%;
+        max-width: 550px;
+        filter: drop-shadow(0 20px 40px rgba(0,0,0,0.25));
+    }
+
+    /* ================= STATS ================= */
+
+    .stats-section{
+        margin-top: 40px;
+    }
+
+    .stat-card{
+        background: rgba(255,255,255,0.12);
+        backdrop-filter: blur(14px);
+        border-radius: 20px;
+        padding: 25px;
+        text-align: center;
+        transition: 0.4s;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .stat-card:hover{
+        transform: translateY(-8px);
+        background: rgba(255,255,255,0.18);
+    }
+
+    .stat-number{
+        font-size: 42px;
+        font-weight: 700;
+        color: #ffe082;
+    }
+
+    .stat-text{
+        margin-top: 8px;
+        font-size: 16px;
+    }
+
+    /* ================= FEATURES ================= */
+
+    .feature-section{
+        margin-top: 70px;
+    }
+
+    .section-title{
+        text-align: center;
+        font-size: 45px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 50px;
+    }
+
+    .feature-card{
+        background: white;
+        border-radius: 25px;
+        padding: 40px 30px;
+        text-align: center;
+        transition: 0.5s;
+        height: 100%;
+        box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card:hover{
+        transform: translateY(-12px);
+        box-shadow: 0 18px 45px rgba(13,110,253,0.18);
+    }
+
+    .feature-icon{
+        width: 100px;
+        height: 100px;
+        margin: auto;
+        border-radius: 50%;
+        background: linear-gradient(135deg,#0d6efd,#00c6ff);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 42px;
+        margin-bottom: 25px;
+        transition: 0.5s;
+    }
+
+    .feature-card:hover .feature-icon{
+        transform: rotate(360deg) scale(1.1);
+    }
+
+    .feature-title{
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #111827;
+    }
+
+    .feature-text{
+        color: #6b7280;
+        line-height: 28px;
+    }
+
+    /* ================= ANIMATION ================= */
+
+    @keyframes float{
+        0%{
+            transform: translateY(0px);
+        }
+        50%{
+            transform: translateY(-15px);
+        }
+        100%{
+            transform: translateY(0px);
+        }
+    }
+
+    @keyframes fadeLeft{
+        from{
+            opacity: 0;
+            transform: translateX(-60px);
+        }
+        to{
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media(max-width:768px){
+
+        .hero-section{
+            padding: 50px 25px;
+            text-align: center;
+        }
+
+        .hero-title{
+            font-size: 42px;
+            line-height: 58px;
+        }
+
+        .hero-text{
+            font-size: 16px;
+        }
+
+        .hero-buttons .hero-btn{
+            margin-bottom: 15px;
+        }
+
+        .section-title{
+            font-size: 32px;
+        }
+
+    }
+
+</style>
+
+<!-- ================= HERO SECTION ================= -->
+
+<div class="container-fluid">
+
+    <div class="row hero-section align-items-center">
+
+        <!-- LEFT CONTENT -->
+
+        <div class="col-lg-7">
+
+            <div class="hero-content">
+
+                <div class="hero-badge">
+                    🧠 AI Powered Healthcare System
+                </div>
+
+                <h1 class="hero-title">
+                    Smart <span>Disease Prediction</span> System
+                </h1>
+
+                <p class="hero-text">
+                    Advanced Artificial Intelligence healthcare platform
+                    designed to analyze symptoms, predict diseases,
+                    and provide intelligent medical insights with
+                    modern machine learning technology.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <a href="{% url 'prediction' %}"
+                       class="hero-btn btn-primary-custom">
+
+                        Start Prediction
+
+                    </a>
+
+                    <a href="{% url 'history' %}"
+                       class="hero-btn btn-outline-custom">
+
+                        View History
+
+                    </a>
+
+                </div>
+
+                <!-- STATS -->
+
+                <div class="row stats-section g-4">
+
+                    <div class="col-md-4">
+
+                        <div class="stat-card">
+
+                            <div class="stat-number">95%</div>
+
+                            <div class="stat-text">
+                                Prediction Accuracy
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <div class="stat-card">
+
+                            <div class="stat-number">100+</div>
+
+                            <div class="stat-text">
+                                Disease Detection
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <div class="stat-card">
+
+                            <div class="stat-number">24/7</div>
+
+                            <div class="stat-text">
+                                AI Support
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT IMAGE -->
+
+        <div class="col-lg-5 text-center">
+
+            <div class="hero-image">
+
+                <img src="{% static 'images/img.jpg' %}" alt="AI Healthcare">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================= FEATURES ================= -->
+
+    <div class="row feature-section">
+
+        <div class="col-sm-12">
+
+            <h2 class="section-title">
+                Powerful Healthcare Features
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🧬
+                </div>
+
+                <div class="feature-title">
+                    AI Prediction
+                </div>
+
+                <div class="feature-text">
+                    Advanced Machine Learning algorithms analyze
+                    symptoms intelligently for accurate disease prediction.
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    📂
+                </div>
+
+                <div class="feature-title">
+                    File Analysis
+                </div>
+
+                <div class="feature-text">
+                    Upload healthcare reports and files
+                    for smart disease detection and analysis.
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    📊
+                </div>
+
+                <div class="feature-title">
+                    Prediction History
+                </div>
+
+                <div class="feature-text">
+                    Track and manage all prediction results
+                    through a modern interactive dashboard.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock body %}

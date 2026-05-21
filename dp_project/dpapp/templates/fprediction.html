@@ -1,27 +1,465 @@
 {% extends "parent.html" %}
+{% load static %}
+
 {% block body %}
- <h2 style="color:rgb(9, 7, 7); text-align: center;">Disease Prediction</h2>
- {% if res %}
- <h4 style="color: red; text-align: center;">Prediction Disease : {{res}}</h4>
 
- {% endif %}
- <form class="form-group" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <table class="table table-borderd" style="width: 50%;margin: auto;">
-    <tr>
-        <td>Select report file</td>
-        <td>
-            <input type="file" name="csv_file" class="form-control" required/>
+<style>
 
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>
-            <button type="submit" class="btn btn-success">Predict</button>
-        </td>
-    </tr>
-    </table>
- </form>
+    /* ================= PAGE HEADER ================= */
+
+    .upload-header{
+        background: linear-gradient(135deg,#0d6efd,#00c6ff);
+        border-radius: 30px;
+        padding: 60px 40px;
+        text-align: center;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    .upload-header::before{
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 50%;
+        top: -120px;
+        right: -100px;
+    }
+
+    .upload-header::after{
+        content: '';
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        background: rgba(255,255,255,0.06);
+        border-radius: 50%;
+        bottom: -90px;
+        left: -80px;
+    }
+
+    .upload-title{
+        font-size: 55px;
+        font-weight: 700;
+        position: relative;
+        z-index: 2;
+    }
+
+    .upload-subtitle{
+        font-size: 18px;
+        margin-top: 15px;
+        position: relative;
+        z-index: 2;
+        color: rgba(255,255,255,0.9);
+    }
+
+    /* ================= UPLOAD CARD ================= */
+
+    .upload-card{
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: blur(16px);
+        border-radius: 30px;
+        padding: 50px 40px;
+        margin-top: 40px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        animation: fadeUp 1s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .upload-card::before{
+        content: '';
+        position: absolute;
+        width: 250px;
+        height: 250px;
+        background: rgba(13,110,253,0.05);
+        border-radius: 50%;
+        top: -100px;
+        right: -80px;
+    }
+
+    /* ================= DRAG AREA ================= */
+
+    .upload-area{
+        border: 3px dashed #0d6efd;
+        border-radius: 25px;
+        padding: 60px 30px;
+        text-align: center;
+        background: #f8fbff;
+        transition: 0.4s;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .upload-area:hover{
+        background: #eef5ff;
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(13,110,253,0.12);
+    }
+
+    .upload-icon{
+        font-size: 80px;
+        color: #0d6efd;
+        margin-bottom: 20px;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .upload-text{
+        font-size: 28px;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .upload-subtext{
+        margin-top: 10px;
+        color: #6b7280;
+        font-size: 16px;
+    }
+
+    .file-input{
+        margin-top: 25px;
+    }
+
+    .form-control{
+        border-radius: 15px;
+        padding: 14px;
+        border: 2px solid #dbeafe;
+        transition: 0.4s;
+    }
+
+    .form-control:focus{
+        border-color: #0d6efd;
+        box-shadow: 0 0 20px rgba(13,110,253,0.2);
+    }
+
+    /* ================= BUTTON ================= */
+
+    .predict-btn{
+        margin-top: 30px;
+        padding: 15px 45px;
+        border: none;
+        border-radius: 50px;
+        background: linear-gradient(135deg,#0d6efd,#00c6ff);
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        transition: 0.4s;
+        box-shadow: 0 10px 25px rgba(13,110,253,0.25);
+    }
+
+    .predict-btn:hover{
+        transform: translateY(-6px) scale(1.05);
+        box-shadow: 0 15px 35px rgba(13,110,253,0.35);
+    }
+
+    /* ================= RESULT ================= */
+
+    .result-box{
+        margin-top: 35px;
+        background: linear-gradient(135deg,#198754,#20c997);
+        color: white;
+        padding: 30px;
+        border-radius: 25px;
+        text-align: center;
+        animation: pulseGlow 2s infinite;
+        box-shadow: 0 10px 35px rgba(25,135,84,0.3);
+    }
+
+    .result-title{
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .result-disease{
+        font-size: 42px;
+        font-weight: 700;
+        margin-top: 12px;
+    }
+
+    /* ================= FEATURES ================= */
+
+    .feature-section{
+        margin-top: 60px;
+    }
+
+    .feature-card{
+        background: white;
+        border-radius: 25px;
+        padding: 35px 25px;
+        text-align: center;
+        height: 100%;
+        transition: 0.5s;
+        box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+    }
+
+    .feature-card:hover{
+        transform: translateY(-12px);
+        box-shadow: 0 18px 45px rgba(13,110,253,0.18);
+    }
+
+    .feature-icon{
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: linear-gradient(135deg,#0d6efd,#00c6ff);
+        color: white;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        margin-bottom: 20px;
+        transition: 0.5s;
+    }
+
+    .feature-card:hover .feature-icon{
+        transform: rotate(360deg) scale(1.1);
+    }
+
+    .feature-title{
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #111827;
+    }
+
+    .feature-text{
+        color: #6b7280;
+        line-height: 28px;
+    }
+
+    /* ================= ANIMATIONS ================= */
+
+    @keyframes fadeUp{
+        from{
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to{
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes float{
+        0%{
+            transform: translateY(0px);
+        }
+        50%{
+            transform: translateY(-15px);
+        }
+        100%{
+            transform: translateY(0px);
+        }
+    }
+
+    @keyframes pulseGlow{
+        0%{
+            box-shadow: 0 0 10px rgba(25,135,84,0.3);
+        }
+        50%{
+            box-shadow: 0 0 35px rgba(25,135,84,0.5);
+        }
+        100%{
+            box-shadow: 0 0 10px rgba(25,135,84,0.3);
+        }
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media(max-width:768px){
+
+        .upload-title{
+            font-size: 38px;
+        }
+
+        .upload-card{
+            padding: 25px;
+        }
+
+        .upload-area{
+            padding: 40px 20px;
+        }
+
+        .result-disease{
+            font-size: 30px;
+        }
+
+    }
+
+</style>
+
+<div class="container-fluid">
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="row">
+
+        <div class="col-sm-12">
+
+            <div class="upload-header">
+
+                <h1 class="upload-title">
+                    File Disease Prediction
+                </h1>
+
+                <p class="upload-subtitle">
+                    Upload your medical report or CSV file and let
+                    our AI system analyze and predict diseases intelligently.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================= UPLOAD CARD ================= -->
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="upload-card">
+
+                <form method="post"
+                      enctype="multipart/form-data">
+
+                    {% csrf_token %}
+
+                    <div class="upload-area">
+
+                        <div class="upload-icon">
+                            📂
+                        </div>
+
+                        <div class="upload-text">
+                            Upload Medical Report
+                        </div>
+
+                        <div class="upload-subtext">
+                            Supported Format : CSV File
+                        </div>
+
+                        <div class="file-input">
+
+                            <input type="file"
+                                   name="csv_file"
+                                   class="form-control"
+                                   required>
+
+                        </div>
+
+                    </div>
+
+                    <div class="text-center">
+
+                        <button type="submit"
+                                class="predict-btn">
+
+                            Predict Disease
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+                <!-- ================= RESULT ================= -->
+
+                {% if res %}
+
+                <div class="result-box">
+
+                    <div class="result-title">
+                        Predicted Disease
+                    </div>
+
+                    <div class="result-disease">
+                        {{res}}
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================= FEATURES ================= -->
+
+    <div class="row feature-section g-4">
+
+        <div class="col-md-4">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🤖
+                </div>
+
+                <div class="feature-title">
+                    AI Analysis
+                </div>
+
+                <div class="feature-text">
+                    Advanced AI algorithms analyze uploaded
+                    reports for intelligent healthcare insights.
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    ⚡
+                </div>
+
+                <div class="feature-title">
+                    Fast Processing
+                </div>
+
+                <div class="feature-text">
+                    Upload reports and receive instant
+                    disease prediction results within seconds.
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🔒
+                </div>
+
+                <div class="feature-title">
+                    Secure Upload
+                </div>
+
+                <div class="feature-text">
+                    Your uploaded reports are securely
+                    processed within the healthcare system.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock body %}
